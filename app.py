@@ -2,8 +2,6 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestRegressor
-from keras.models import Sequential
-from keras.layers import LSTM, Dense
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 import statsmodels.api as sm
@@ -56,20 +54,6 @@ if uploaded_file:
             modelos["Random Forest"] = (rf_model, rf_rmse)
         except:
             modelos["Random Forest"] = (None, np.inf)
-
-        try:
-            lstm_model = Sequential([
-                LSTM(50, activation='relu', input_shape=(1, 1)),
-                Dense(1)
-            ])
-            lstm_model.compile(optimizer='adam', loss='mse')
-            train_reshaped = np.array(train).reshape(-1, 1, 1)
-            lstm_model.fit(train_reshaped, train, epochs=50, verbose=0)
-            test_reshaped = np.array(test).reshape(-1, 1, 1)
-            lstm_rmse = sqrt(mean_squared_error(test, lstm_model.predict(test_reshaped).flatten()))
-            modelos["LSTM"] = (lstm_model, lstm_rmse)
-        except:
-            modelos["LSTM"] = (None, np.inf)
 
         mejor_modelo = min(modelos, key=lambda x: modelos[x][1])
         mejor_modelo_entrenado = modelos[mejor_modelo][0]
@@ -124,3 +108,4 @@ if uploaded_file:
         file_name="Pronostico_Demanda.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+

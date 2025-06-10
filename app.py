@@ -79,7 +79,6 @@ if uploaded_file:
     st.subheader("📊 Resultados del Pronóstico")
     st.dataframe(df_resultados)
 
-    # Top 15 productos más pronosticados
     df_resultados["Total Pronóstico"] = df_resultados["Pronóstico"].apply(lambda x: sum(x) if isinstance(x, list) else 0)
     top15 = df_resultados.sort_values("Total Pronóstico", ascending=False).head(15)
 
@@ -97,7 +96,6 @@ if uploaded_file:
     ax.set_ylabel("Unidades Pronosticadas")
     st.pyplot(fig)
 
-    # Descargar resultados
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
         df_resultados.to_excel(writer, sheet_name="Pronostico")
@@ -108,4 +106,3 @@ if uploaded_file:
         file_name="Pronostico_Demanda.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-
